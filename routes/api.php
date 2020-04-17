@@ -15,8 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::namespace('API')->group(function () {
-    Route::resource('users', 'UserController')->middleware('auth:api');
-    Route::resource('categories', 'CategoryController')->middleware('auth:api');
+    Route::get('login', 'UserController@loginPage')->name('login');
+    Route::post('login', 'UserController@login')->name('login');
+    Route::post('register', 'UserController@register')->name('register');
+
+
+    Route::resource('users', 'UserController')->only(['index', 'show', 'update', 'destroy'])->middleware('auth:api');
+    Route::resource('categories', 'CategoryController');
     Route::resource('subcategories', 'SubCategoryController');
     Route::resource('items', 'ItemController');
     Route::resource('checkouts', 'CheckoutController');
@@ -29,7 +34,3 @@ Route::namespace('API')->group(function () {
     Route::get('subcategories/{subcategory}/items', 'ItemController@subcategoryItem')->name('subcategoryItem');
     Route::get('users/{user}/checkouts', 'CheckoutController@userCheckouts')->name('userCheckouts');
 });
-
-Route::get('login', function () {
-    return 'Login Please';
-})->name('login');
