@@ -12,14 +12,16 @@ use Illuminate\Http\Request;
 
 class SubCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return SubCategoriesCollection::collection(SubCategory::paginate(10));
+        return (SubCategoriesCollection::collection(SubCategory::paginate(10)))->additional([
+            'msg' => 'subcategories list',
+            'create subcategory' => [
+                'href' => route('subcategories.store'),
+                'method' => 'POST',
+                'params' => 'category_id, name'
+            ]
+        ]);
     }
 
     public function userSubCategory(User $user)
@@ -32,69 +34,105 @@ class SubCategoryController extends Controller
         return SubCategoriesCollection::collection(SubCategory::where('category_id', $category->id)->paginate(10));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|min:3|max:20'
+        ]);
+
+        if (auth()->user()->role == 'admin') {
+            $subcategory = new SubCategory();
+            $subcategory->user_id = auth()->user()->id;
+            $subcategory->category_id = $request->category_id;
+            $subcategory->name = $request->name;
+
+            if ($subcategory->save()) {
+                return response()->json([
+                    'msg' => 'the subcategory is created successfully',
+                    'data' => [
+                        'name' => $subcategory->name,
+                        'category' => $subcategory->category->name,
+                        'user' => $subcategory->user->name,
+                        'href' => route('subcategories.show', $subcategory->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during create subcategory'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to create subcategory'
+            ], 401);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(SubCategory $subcategory)
     {
         return new SubCategoriesResource($subcategory);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|min:3|max:20'
+        ]);
+
+        if (auth()->user()->role == 'admin') {
+            $subcategory = SubCategory::find($id);
+            $subcategory->name = $request->name;
+
+            if ($subcategory->save()) {
+                return response()->json([
+                    'msg' => 'the subcategory is updated successfully',
+                    'data' => [
+                        'name' => $subcategory->name,
+                        'category' => $subcategory->category->name,
+                        'user' => $subcategory->user->name,
+                        'href' => route('subcategories.show', $subcategory->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during update subcategory'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to update subcategory'
+            ], 401);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        if (auth()->user()->role == 'admin') {
+            $subcategory = SubCategory::find($id);
+
+            if ($subcategory->delete()) {
+                return response()->json([
+                    'msg' => 'the subcategory is deleted successfully',
+                    'subcategories list' => [
+                        'href' => route('subcategories.index'),
+                        'method' => 'GET'
+                    ],
+                    'create category' => [
+                        'href' => route('subcategories.store'),
+                        'method' => 'POST',
+                        'params' => 'category_id, name',
+                    ]
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during delete subcategory'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to delete subcategory'
+            ], 401);
+        }
     }
 }
