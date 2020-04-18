@@ -11,14 +11,16 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return CategoriesCollection::collection(Category::paginate(10));
+        return (CategoriesCollection::collection(Category::paginate(10)))->additional([
+            'msg' => 'categories list',
+            'create category' => [
+                'href' => route('categories.store'),
+                'method' => 'POST',
+                'params' => 'name'
+            ]
+        ]);
     }
 
     public function userCategories(User $user)
@@ -26,25 +28,36 @@ class CategoryController extends Controller
         return CategoriesCollection::collection(Category::where('user_id', $user->id)->paginate(10));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|min:3|max:20'
+        ]);
+
+        if (auth()->user()->role == 'admin') {
+            $category = new Category();
+            $category->user_id = auth()->user()->id;
+            $category->name = $request->name;
+
+            if ($category->save()) {
+                return response()->json([
+                    'msg' => 'the category is created successfully',
+                    'data' => [
+                        'name' => $category->name,
+                        'user' => $category->user->name,
+                        'href' => route('categories.show', $category->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during create category'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to create category'
+            ], 401);
+        }
     }
 
     /**
@@ -58,37 +71,64 @@ class CategoryController extends Controller
         return new CategoriesResource($category);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|min:3|max:20'
+        ]);
+
+        if (auth()->user()->role == 'admin') {
+            $category = Category::find($id);
+            $category->name = $request->name;
+
+            if ($category->save()) {
+                return response()->json([
+                    'msg' => 'the category is updated successfully',
+                    'data' => [
+                        'name' => $category->name,
+                        'user' => $category->user->name,
+                        'href' => route('categories.show', $category->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during update category'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to update category'
+            ], 401);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        if (auth()->user()->role == 'admin') {
+            $category = Category::find($id);
+
+            if ($category->delete()) {
+                return response()->json([
+                    'msg' => 'the category is deleted successfully',
+                    'categories list' => [
+                        'href' => route('categories.index'),
+                        'method' => 'GET'
+                    ],
+                    'create category' => [
+                        'href' => route('categories.store'),
+                        'method' => 'POST',
+                        'params' => 'name',
+                    ]
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during delete category'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to delete category'
+            ], 401);
+        }
     }
 }
