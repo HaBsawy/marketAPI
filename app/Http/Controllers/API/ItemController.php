@@ -12,7 +12,6 @@ use App\Item;
 use App\SubCategory;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {

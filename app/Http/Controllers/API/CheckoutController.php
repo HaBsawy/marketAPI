@@ -6,16 +6,12 @@ use App\Checkout;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CheckoutCollection;
 use App\Http\Resources\CheckoutResource;
+use App\Item;
 use App\User;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return CheckoutCollection::collection(Checkout::paginate(10));
@@ -26,69 +22,99 @@ class CheckoutController extends Controller
         return CheckoutCollection::collection(Checkout::where('user_id', $user->id)->paginate(10));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $checkout = new Checkout();
+        $checkout->user_id = auth()->user()->id;
+        $checkout->status = 'prepared';
+
+        if ($checkout->save()) {
+            foreach ($request->items as $item) {
+                if (!empty(Item::find($item['item_id']))) {
+                    $checkout->items()->attach($item['item_id']);
+                }
+            }
+
+            return response()->json([
+                'msg' => 'the checkout is created successfully',
+                'data' => [
+                    'user' => $checkout->user->name,
+                    'status' => $checkout->status,
+                    'href' => route('checkouts.show', $checkout->id)
+                ],
+            ], 201);
+        } else {
+            return response()->json([
+                'error' => 'an error occur during create checkout'
+            ], 202);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(Checkout $checkout)
     {
         return new CheckoutResource($checkout);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'status' => 'required|in:prepared,sent,delivered & paid'
+        ]);
+
+        if (auth()->user()->role !== 'custome') {
+            $checkout = Checkout::find($id);
+            $checkout->status = $request->status;
+
+            if ($checkout->save()) {
+                return response()->json([
+                    'msg' => 'the checkout is updated successfully',
+                    'data' => [
+                        'user' => $checkout->user->name,
+                        'status' => $checkout->status,
+                        'href' => route('checkouts.show', $checkout->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during update checkout'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to update checkout'
+            ], 401);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $checkout = Checkout::find($id);
+
+        if ($checkout->user_id == auth()->user()->id) {
+            $checkout->items()->detach();
+
+            if ($checkout->delete()) {
+                return response()->json([
+                    'msg' => 'the checkout is deleted successfully',
+                    'checkout list' => [
+                        'href' => route('checkouts.index'),
+                        'method' => 'GET'
+                    ],
+                    'create checkout' => [
+                        'href' => route('checkouts.store'),
+                        'method' => 'POST',
+                        'params' => '',
+                    ]
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during delete checkout'
+                ], 202);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'You have not permission to delete checkout'
+            ], 401);
+        }
     }
 }

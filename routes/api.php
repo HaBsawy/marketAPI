@@ -24,7 +24,7 @@ Route::namespace('API')->group(function () {
     Route::resource('categories', 'CategoryController')->except(['create', 'edit'])->middleware('auth:api');
     Route::resource('subcategories', 'SubCategoryController')->except(['create', 'edit'])->middleware('auth:api');
     Route::resource('items', 'ItemController')->except(['create', 'edit'])->middleware('auth:api');
-    Route::resource('checkouts', 'CheckoutController');
+    Route::resource('checkouts', 'CheckoutController')->except(['create', 'edit'])->middleware('auth:api');
 
     Route::get('users/{user}/categories', 'CategoryController@userCategories')->name('userCategories');
     Route::get('users/{user}/subcategories', 'SubCategoryController@userSubCategory')->name('userSubCategory');
