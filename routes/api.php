@@ -23,7 +23,7 @@ Route::namespace('API')->group(function () {
     Route::resource('users', 'UserController')->only(['index', 'show', 'update', 'destroy'])->middleware('auth:api');
     Route::resource('categories', 'CategoryController')->except(['create', 'edit'])->middleware('auth:api');
     Route::resource('subcategories', 'SubCategoryController')->except(['create', 'edit'])->middleware('auth:api');
-    Route::resource('items', 'ItemController');
+    Route::resource('items', 'ItemController')->except(['create', 'edit'])->middleware('auth:api');
     Route::resource('checkouts', 'CheckoutController');
 
     Route::get('users/{user}/categories', 'CategoryController@userCategories')->name('userCategories');
