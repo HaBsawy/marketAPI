@@ -60,15 +60,19 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
+    public function show($id)
     {
-        return new CategoriesResource($category);
+        return (new CategoriesResource(Category::find($id)))->additional([
+            'update category' => [
+                'href' => route('categories.update', $id),
+                'method' => 'PUT',
+                'params' => 'name'
+            ],
+            'delete category' => [
+                'href' => route('categories.destroy', $id),
+                'method' => 'DELETE'
+            ]
+        ]);
     }
 
     public function update(Request $request, $id)

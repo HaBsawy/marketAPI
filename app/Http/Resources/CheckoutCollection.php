@@ -15,9 +15,11 @@ class CheckoutCollection extends JsonResource
     public function toArray($request)
     {
         return [
+            'user' => $this->user->name,
             'status' => $this->status,
-            'href' => [
-                'checkout' => route('checkouts.show', $this->id)
+            'checkout' => [
+                'href' => route('checkouts.show', $this->id),
+                'method' => 'GET'
             ]
         ];
     }

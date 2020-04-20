@@ -69,9 +69,19 @@ class SubCategoryController extends Controller
         }
     }
 
-    public function show(SubCategory $subcategory)
+    public function show($id)
     {
-        return new SubCategoriesResource($subcategory);
+        return (new SubCategoriesResource(SubCategory::find($id)))->additional([
+            'update subcategory' => [
+                'href' => route('subcategories.update', $id),
+                'method' => 'PUT',
+                'params' => 'name'
+            ],
+            'delete subcategory' => [
+                'href' => route('subcategories.destroy', $id),
+                'method' => 'DELETE'
+            ]
+        ]);
     }
 
     public function update(Request $request, $id)

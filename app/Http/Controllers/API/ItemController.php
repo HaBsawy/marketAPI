@@ -144,9 +144,19 @@ class ItemController extends Controller
         }
     }
 
-    public function show(Item $item)
+    public function show($id)
     {
-        return new ItemsResource($item);
+        return (new ItemsResource(Item::find($id)))->additional([
+            'update item' => [
+                'href' => route('items.update', $id),
+                'method' => 'PUT',
+                'params' => 'price, stock, description, expiration_date, min_allowed_stock'
+            ],
+            'delete item' => [
+                'href' => route('items.destroy', $id),
+                'method' => 'DELETE'
+            ]
+        ]);
     }
 
     public function update(Request $request, $id)

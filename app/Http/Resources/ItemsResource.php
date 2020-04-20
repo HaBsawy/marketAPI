@@ -23,9 +23,9 @@ class ItemsResource extends JsonResource
             'description' => $this->description,
             'expiration_date' => $this->expiration_date,
             'min_allowed_stock' => $this->min_allowed_stock,
-            'href' => [
-                'images' => 'images link',
-                'checkouts' => 'checkouts link'
+            'images' => [
+                'href' => 'images link',
+                'method' => 'GET'
             ]
         ];
     }

@@ -15,10 +15,11 @@ class CategoriesCollection extends JsonResource
     public function toArray($request)
     {
         return [
-            'user' => $this->user->name,
             'name' => $this->name,
-            'href' => [
-                'category' => route('categories.show', $this->id),
+            'user' => $this->user->name,
+            'category' => [
+                'href' => route('categories.show', $this->id),
+                'method' => 'GET'
             ]
         ];
     }

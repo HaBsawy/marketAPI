@@ -16,10 +16,11 @@ class SubCategoriesResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'user' => $this->user->name,
             'category' => $this->category->name,
-            'href' => [
-                'items' => ($this->items->count() !== 0) ? route('subcategoryItem', $this->id) : 'there is no items',
+            'user' => $this->user->name,
+            'items' => [
+                'href' => ($this->items->count() !== 0) ? route('subcategoryItem', $this->id) : 'there is no items',
+                'method' => 'GET'
             ],
         ];
     }

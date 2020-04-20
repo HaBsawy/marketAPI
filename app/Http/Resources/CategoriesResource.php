@@ -15,10 +15,11 @@ class CategoriesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'user_name' => $this->user->name,
             'name' => $this->name,
-            'href' => [
-                'subcategories' => ($this->subCategories->count() !== 0) ? route('categorySubCategory', $this->id) : 'there is no subcategories',
+            'user' => $this->user->name,
+            'subcategories' => [
+                'href' => ($this->subCategories->count() !== 0) ? route('categorySubCategory', $this->id) : 'there is no subcategories',
+                'method' => 'GET'
             ]
         ];
     }

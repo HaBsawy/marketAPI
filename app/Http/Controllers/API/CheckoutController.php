@@ -14,7 +14,14 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        return CheckoutCollection::collection(Checkout::paginate(10));
+        return (CheckoutCollection::collection(Checkout::paginate(10)))->additional([
+            'msg' => 'checkouts list',
+            'create checkout' => [
+                'href' => route('checkouts.store'),
+                'method' => 'POST',
+                'params' => '"items": {"0": {"item_id": "1"},"1": {"item_id": "2"},"2": {"item_id": "3"}, .......}',
+            ]
+        ]);
     }
 
     public function userCheckouts(User $user)
@@ -50,9 +57,19 @@ class CheckoutController extends Controller
         }
     }
 
-    public function show(Checkout $checkout)
+    public function show($id)
     {
-        return new CheckoutResource($checkout);
+        return (new CheckoutResource(Checkout::find($id)))->additional([
+            'update checkout' => [
+                'href' => route('checkouts.update', $id),
+                'method' => 'PUT',
+                'params' => 'status'
+            ],
+            'delete checkout' => [
+                'href' => route('checkouts.destroy', $id),
+                'method' => 'DELETE'
+            ]
+        ]);
     }
 
     public function update(Request $request, $id)

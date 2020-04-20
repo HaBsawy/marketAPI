@@ -17,8 +17,9 @@ class CheckoutResource extends JsonResource
         return [
             'user' => $this->user->name,
             'status' => $this->status,
-            'href' => [
-                'items' => ($this->items->count() !== 0) ? route('checkoutItem', $this->id) : 'there is no items',
+            'items' => [
+                'href' => ($this->items->count() !== 0) ? route('checkoutItem', $this->id) : 'there is no items',
+                'method' => 'GET'
             ]
         ];
     }

@@ -17,14 +17,23 @@ class UserResource extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'password' => $this->password,
             'role' => $this->role,
-            'href' => [
-                'categories' => ($this->categories->count() !== 0) ? route('userCategories', $this->id) : 'there is no categories',
-                'subcategories' => ($this->subCategories->count() !== 0) ? route('userSubCategory', $this->id) : 'there is no subcategories',
-                'items' => ($this->items->count() !== 0) ? route('userItem', $this->id) : 'there is no items',
-                'checkouts' => ($this->checkouts->count() !== 0) ? route('userCheckouts', $this->id) : 'there is no checkouts',
-            ]
+            'categories' => [
+                'href' => ($this->categories->count() !== 0) ? route('userCategories', $this->id) : 'there is no categories',
+                'method' => 'GET'
+            ],
+            'subcategories' => [
+                'href' => ($this->subCategories->count() !== 0) ? route('userSubCategory', $this->id) : 'there is no subcategories',
+                'method' => 'GET'
+            ],
+            'items' => [
+                'href' => ($this->items->count() !== 0) ? route('userItem', $this->id) : 'there is no items',
+                'method' => 'GET'
+            ],
+            'checkouts' => [
+                'href' => ($this->checkouts->count() !== 0) ? route('userCheckouts', $this->id) : 'there is no checkouts',
+                'method' => 'GET'
+            ],
         ];
     }
 }

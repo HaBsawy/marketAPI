@@ -15,11 +15,12 @@ class SubCategoriesCollection extends JsonResource
     public function toArray($request)
     {
         return [
-            'user' => $this->user->name,
-            'category' => $this->category->name,
             'name' => $this->name,
-            'href' => [
-                'subcategory' => route('subcategories.show', $this->id),
+            'category' => $this->category->name,
+            'user' => $this->user->name,
+            'subcategory' => [
+                'href' => route('subcategories.show', $this->id),
+                'method' => 'GET'
             ],
         ];
     }

@@ -23,8 +23,9 @@ class ItemsCollection extends JsonResource
             'description' => $this->description,
             'expiration_date' => $this->expiration_date,
             'min_allowed_stock' => $this->min_allowed_stock,
-            'href' => [
-                'item' => route('items.show', $this->id),
+            'item' => [
+                'href' => route('items.show', $this->id),
+                'method' => 'GET'
             ]
         ];
     }
