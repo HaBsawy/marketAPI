@@ -91,8 +91,21 @@ class UserController extends Controller
 
             $user = User::find($id);
             $user->role = $request->role;
-            $user->save();
-            return redirect()->route('users.show', $id);
+            if ($user->save()) {
+                return response()->json([
+                    'msg' => 'the category is updated successfully',
+                    'data' => [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                        'href' => route('users.show', $user->id)
+                    ],
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during update category'
+                ], 202);
+            }
         } else {
             return response()->json([
                 'msg' => 'You have not permission to update user'
@@ -105,8 +118,19 @@ class UserController extends Controller
         if (auth()->user()->role == 'admin') {
 
             $user = User::find($id);
-            $user->delete();
-            return redirect()->route('users.index');
+            if ($user->delete()) {
+                return response()->json([
+                    'msg' => 'the user is deleted successfully',
+                    'users list' => [
+                        'href' => route('users.index'),
+                        'method' => 'GET'
+                    ]
+                ], 201);
+            } else {
+                return response()->json([
+                    'error' => 'an error occur during delete user'
+                ], 202);
+            }
         } else {
             return response()->json([
                 'msg' => 'You have not permission to delete user'

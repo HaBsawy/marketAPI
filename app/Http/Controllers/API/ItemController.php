@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Checkout;
-use App\CheckoutItems;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemsCollection;
 use App\Http\Resources\ItemsResource;

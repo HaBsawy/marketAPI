@@ -3,20 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="30ccdc11-f961-49c7-be4d-fb5ab9cb1b6c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/CategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/CategoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/CheckoutController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/CheckoutController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ItemController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ItemController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/SubCategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SubCategoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/CategoriesCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/CategoriesCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/CategoriesResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/CategoriesResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/CheckoutCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/CheckoutCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/CheckoutResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/CheckoutResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ItemsCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ItemsCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/ItemsResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/ItemsResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/SubCategoriesCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/SubCategoriesCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/SubCategoriesResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/SubCategoriesResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/UserCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/UserCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/UserResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/UserResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +167,7 @@
       <workItem from="1586548616324" duration="4852000" />
       <workItem from="1586991463975" duration="20830000" />
       <workItem from="1587216608166" duration="21097000" />
-      <workItem from="1587391962562" duration="3231000" />
+      <workItem from="1587391962562" duration="4864000" />
     </task>
     <servers />
   </component>
